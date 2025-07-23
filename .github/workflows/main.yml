@@ -34,15 +34,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-          cache: "pnpm" # Set this to npm, yarn or pnpm.
-
-      - name: setup bun (for running scripts)
-        uses: oven-sh/setup-bun@v2
+          cache: "pnpm"
 
       - name: install Rust stable
-        uses: dtolnay/rust-toolchain@stable # Set this to dtolnay/rust-toolchain@nightly
+        uses: dtolnay/rust-toolchain@stable
         with:
-          # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
           targets: ${{ contains(matrix.platform, 'macos') && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
       - name: Rust cache
@@ -50,14 +46,8 @@ jobs:
         with:
           workspaces: ". -> target"
 
-      - name: Install posthog-cli
-        run: |
-          bun ./ensure-posthog.ts
-   
-
       - name: install frontend dependencies
-        # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
-        run: pnpm install # change this to npm or pnpm depending on which one you use.
+        run: pnpm install
 
       - name: test
         run: pnpm --filter desktop test
@@ -72,7 +62,7 @@ jobs:
           APPLE_TEAM_ID: ${{secrets.APPLE_TEAM_ID}}
         with:
           projectPath: ./desktop
-          tagName: v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
+          tagName: v__VERSION__
           releaseName: "v__VERSION__"
           releaseBody: "See the assets to download this version and install, or go to https://chatframe.co to download."
           releaseDraft: true
