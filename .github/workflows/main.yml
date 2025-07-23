@@ -54,6 +54,8 @@ jobs:
 
       - uses: tauri-apps/tauri-action@v0.5.18
         env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{secrets.TAURI_SIGNING_PRIVATE_KEY}}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           APPLE_CERTIFICATE: ${{secrets.APPLE_CERTIFICATE}}
           APPLE_CERTIFICATE_PASSWORD: ${{secrets.APPLE_CERTIFICATE_PASSWORD}}
