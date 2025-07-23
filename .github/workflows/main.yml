@@ -28,13 +28,11 @@ jobs:
           token: ${{ secrets.GH_TOKEN_FOR_CHECKOUT }}
           ref: ${{ github.event.client_payload.sha }}
 
-      - uses: pnpm/action-setup@v4
-
       - name: setup node
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-          cache: "pnpm"
+          cache: "npm"
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -47,21 +45,21 @@ jobs:
           workspaces: ". -> target"
 
       - name: install frontend dependencies
-        run: pnpm install
+        run: npm ci
 
       - name: test
-        run: pnpm --filter desktop test
+        run: npm --workspace=desktop test
 
       - uses: tauri-apps/tauri-action@v0.5.18
         env:
-          TAURI_SIGNING_PRIVATE_KEY: ${{secrets.TAURI_SIGNING_PRIVATE_KEY}}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD}}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          APPLE_CERTIFICATE: ${{secrets.APPLE_CERTIFICATE}}
-          APPLE_CERTIFICATE_PASSWORD: ${{secrets.APPLE_CERTIFICATE_PASSWORD}}
-          APPLE_ID: ${{secrets.APPLE_ID}}
-          APPLE_PASSWORD: ${{secrets.APPLE_PASSWORD}}
-          APPLE_TEAM_ID: ${{secrets.APPLE_TEAM_ID}}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           projectPath: ./desktop
           tagName: v__VERSION__
