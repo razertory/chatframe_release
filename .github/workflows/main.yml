@@ -64,7 +64,7 @@ jobs:
           releaseBody: "See the assets to download this version and install."
           releaseDraft: true
           prerelease: false
-          repo: chatframe-release
+          repo: chatframe_release
           owner: razertory
           releaseCommitish: main
     
