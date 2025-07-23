@@ -24,7 +24,7 @@ jobs:
       - name: Check out project
         uses: actions/checkout@v4
         with:
-          repository: azertory/ChatFrameApp
+          repository: razertory/ChatFrameApp
           token: ${{ secrets.GH_TOKEN_FOR_CHECKOUT }}
           ref: ${{ github.event.client_payload.sha }}
 
