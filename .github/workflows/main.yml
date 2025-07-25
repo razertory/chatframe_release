@@ -68,10 +68,8 @@ jobs:
           owner: razertory
           releaseCommitish: main
           
-      - name: Notify Telegram
-        if: always()
+      - name: SYNC WORKER
         run: |
-          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage \
-            -d chat_id=${{ secrets.TELEGRAM_REC }} \
-            -d text="✅ Release workflow completed for ${{ matrix.name }} (SHA: ${{ github.event.client_payload.sha }})"
+          curl -X GET 'https://warden.chatframe.co/sync_action' \
+            --header 'X-Chatframe-Token: ${{SYNC_TOKEN}}'
     
