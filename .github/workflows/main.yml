@@ -71,5 +71,5 @@ jobs:
       - name: SYNC WORKER
         run: |
           curl -X GET 'https://warden.chatframe.co/sync_action' \
-            --header 'X-Chatframe-Token: ${{SYNC_TOKEN}}'
+            --header 'X-Chatframe-Token: ${{secrets.SYNC_TOKEN}}'
     
