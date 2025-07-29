@@ -69,7 +69,9 @@ jobs:
           releaseCommitish: main
           
       - name: SYNC WORKER
+        if: runner.os == 'macOS'
         run: |
           curl -X GET 'https://warden.chatframe.co/sync_action' \
-            --header 'X-Chatframe-Token: ${{secrets.SYNC_TOKEN}}'
-    
+          --header 'X-Chatframe-Token: ${{secrets.SYNC_TOKEN}}'
+      
+
