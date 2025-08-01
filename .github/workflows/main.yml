@@ -5,21 +5,12 @@ on:
     types: [on-demand-release]
 
 jobs:
-  publish-tauri:
+  # ---------- macOS build ----------
+  build-macos:
     permissions:
       contents: write
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: macos-latest
-            args: "--target universal-apple-darwin"
-            name: macOS universal
-          - platform: "windows-latest"
-            args: ""
-            name: Windows x64
-    name: ${{ matrix.name }}
-    runs-on: ${{ matrix.platform }}
+    name: macOS universal
+    runs-on: macos-latest
     steps:
       - name: Check out project
         uses: actions/checkout@v4
@@ -37,7 +28,7 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ contains(matrix.platform, 'macos') && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+          targets: "aarch64-apple-darwin,x86_64-apple-darwin"
 
       - name: Rust cache
         uses: swatinem/rust-cache@v2
@@ -58,8 +49,8 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
-          args: ${{ matrix.args }}
-          tagName: v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
+          args: "--target universal-apple-darwin"
+          tagName: v__VERSION__
           releaseName: "v__VERSION__"
           releaseBody: "See the assets to download this version and install."
           releaseDraft: true
@@ -67,11 +58,61 @@ jobs:
           repo: chatframe_release
           owner: razertory
           releaseCommitish: main
-          
-      - name: SYNC WORKER
-        if: runner.os == 'macOS'
+
+  # ---------- Windows build ----------
+  build-windows:
+    permissions:
+      contents: write
+    name: Windows x64
+    runs-on: windows-latest
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+        with:
+          repository: razertory/ChatFrameApp
+          token: ${{ secrets.GH_TOKEN_FOR_CHECKOUT }}
+          ref: ${{ github.event.client_payload.sha }}
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: "npm"
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: ". -> target"
+
+      - name: install frontend dependencies
+        run: npm ci
+
+      - uses: tauri-apps/tauri-action@v0.5.18
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          args: ""
+          tagName: v__VERSION__
+          releaseName: "v__VERSION__"
+          releaseBody: "See the assets to download this version and install."
+          releaseDraft: true
+          prerelease: false
+          repo: chatframe_release
+          owner: razertory
+          releaseCommitish: main
+
+  # ---------- 同步 Worker ----------
+  sync-worker:
+    name: SYNC WORKER
+    runs-on: ubuntu-latest
+    needs: [build-macos, build-windows]
+    steps:
+      - name: Trigger sync
         run: |
           curl -X GET 'https://warden.chatframe.co/sync_action' \
-          --header 'X-Chatframe-Token: ${{secrets.SYNC_TOKEN}}'
-      
-
+            --header 'X-Chatframe-Token: ${{ secrets.SYNC_TOKEN }}'
