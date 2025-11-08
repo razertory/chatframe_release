@@ -28,6 +28,8 @@ We update the provider models in the cloud so you don't need to update the deskt
 
 Also ChatFrame provide `Custom Providers(OpenAI compatible)` for some users like Ollama or self-hosted llms as long as the API is compatible to OpenAI like 
 
+Recently(2025.11) We have implemented a new provider integration: Github Copilot. You can select the Github Copilot and click login. Then you can reuse your subscribtion. It's really economical.
+
 ```shell
 curl https://api.openai.com/v1/chat/completions \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
