@@ -3,13 +3,15 @@
 > A cross-platform desktop chatbot that unifies access to multiple LLM providers, supports MCP (Model Context Protocol) servers, and provides built-in retrieval-augmented generation (RAG) for local files. Available for macOS (Apple Silicon & Intel) and Windows (x86_64).
 
 ## Overview
+ChatFrame is built for developers and power users who want direct access to AI models, and deliver maximum value of your tokens
+.
 ChatFrame delivers a single, polished interface for interacting with language models while giving users full control over their data. A plug-in system for custom tools via MCP and out-of-the-box RAG let you turn any PDF, text, or code file into searchable context—without uploading data to third-party services.
 
 ## Quick Start
 1. Download the latest release for your OS from [chatframe.co](https://chatframe.co).
 2. Launch the app and open **Providers** to add your API keys. You can validate your configuration by clicking **Verify**.
 3. Click the first **Chat** button one the left to start
-## Supported LLM Providers
+## Supported Official LLM Providers
 - DeepSeek
 - OpenAI
 - Anthropic
@@ -21,12 +23,37 @@ ChatFrame delivers a single, polished interface for interacting with language mo
 - Qwen
 - GoogleAIStudio
 - Zhipu
-- Custom Providers(OpenAI compatible)
+
+We update the provider models in the cloud so you don't need to update the desktop. Just click the sync button.
+
+Also ChatFrame provide `Custom Providers(OpenAI compatible)` for some users like Ollama or self-hosted llms as long as the API is compatible to OpenAI like 
+
+```shell
+curl https://api.openai.com/v1/chat/completions \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "model": "gpt-4.1",
+        "messages": [
+          {"role": "system", "content": "You are a helpful assistant."},
+          {"role": "user", "content": "Hello, 4.1!"}
+        ],
+        "temperature": 0.7,
+        "top_p": 1.0,
+        "max_tokens": 150,
+        "frequency_penalty": 0,
+        "presence_penalty": 0,
+        "stop": null,
+        "stream": false,
+        "user": "unique_user_123"
+      }'
+
+```
+
 
 
 ## MCP (Model Context Protocol) Support
-ChatFrame supports SSE, Streamable HTTP, and Stdio MCP servers, similar to [Cursor](https://cursor.com/).
-Add any MCP server to expose its tools at runtime.
+ChatFrame supports SSE, Streamable HTTP, and Stdio MCP servers. Go to settings -> MCP to add your MCP servers.
 
 ### Runtime Environment(STDIO)
 Stdio MCP servers require a local runtime environment. For example, to use the Postgres MCP server,
@@ -46,10 +73,6 @@ Stdio MCP servers require a local runtime environment. For example, to use the P
 
 **Node.js must be installed**.
 
-*Next Step*
-
-DXT (one-click MCP installation, similar to browser extensions) will be introduced in the next major release.
-
 *Why aren’t Node.js and Python bundled?*
 I'd prefer to let users control their own runtime environments. Bundled interpreters can introduce version conflicts and increase the application footprint.
 
@@ -62,7 +85,7 @@ Create workspaces, upload local files (PDF, TXT, MD, code), and instantly build 
 - Live **artifacts** – render React components, HTML, SVG, or code snippets in an isolated sandbox that updates in real time
 
 ## Pricing
-ChatFrame is currently free in limited features, unlock pro features to get full features
+ChatFrame is currently a paid software product, we support a life time license once the payment is completed.
 
 
 ## Feature Map
@@ -80,13 +103,15 @@ ChatFrame is currently free in limited features, unlock pro features to get full
     - Install any kind of MCP server
     - Run the server by clicking start
 - **Model Providers**
-    - *
+  - offical LLMs
+  - custom LLMs
 - **Settings**
   - **App**
-    - Appearance: System / Light / Dark
+    - Appearance:  Light / Dark
     - Updates: ChatFrame downloads updates in the background and displays an install button when ready
   - **Shortcuts**
     - New Chat: ⌘N
     - Toggle Sidebar: ⌘B
+    - Open Settings ⌘s
   - **Advanced**
     - Proxy URL: sets the `all_proxy` environment variable. Leave blank to disable proxying. When configured, all LLM API requests are routed through the specified proxy.
