@@ -23,39 +23,17 @@ ChatFrame delivers a single, polished interface for interacting with language mo
 - Qwen
 - GoogleAIStudio
 - Zhipu
+- Github Copilot
 
 We update the provider models in the cloud so you don't need to update the desktop. Just click the sync button.
 
 Also ChatFrame provide `Custom Providers(OpenAI compatible)` for some users like Ollama or self-hosted llms as long as the API is compatible to OpenAI like 
 
-Recently(2025.11) We have implemented a new provider integration: Github Copilot. You can select the Github Copilot and click login. Then you can reuse your subscribtion. It's really economical.
-
-```shell
-curl https://api.openai.com/v1/chat/completions \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-        "model": "gpt-4.1",
-        "messages": [
-          {"role": "system", "content": "You are a helpful assistant."},
-          {"role": "user", "content": "Hello, 4.1!"}
-        ],
-        "temperature": 0.7,
-        "top_p": 1.0,
-        "max_tokens": 150,
-        "frequency_penalty": 0,
-        "presence_penalty": 0,
-        "stop": null,
-        "stream": false,
-        "user": "unique_user_123"
-      }'
-
-```
-
+Recently(2025.11) We have implemented a new provider integration: Github Copilot. You can select the Github Copilot and click login. Then you can reuse your subscribtion.
 
 
 ## MCP (Model Context Protocol) Support
-ChatFrame supports SSE, Streamable HTTP, and Stdio MCP servers. Go to settings -> MCP to add your MCP servers.
+ChatFrame is listed on the MCP official website:https://modelcontextprotocol.io/clients#chatframe, supports SSE, Streamable HTTP, and Stdio MCP servers. Go to settings -> MCP to add your MCP servers.
 
 ### Runtime Environment(STDIO)
 Stdio MCP servers require a local runtime environment. For example, to use the Postgres MCP server,
@@ -63,7 +41,7 @@ Stdio MCP servers require a local runtime environment. For example, to use the P
 ```json
 {
   "postgres": {
-    "command": "npx",
+    "command": "npx", // use your own Node runtime
     "args": [
       "-y",
       "@modelcontextprotocol/server-postgres",
@@ -72,8 +50,6 @@ Stdio MCP servers require a local runtime environment. For example, to use the P
   }
 }
 ```
-
-**Node.js must be installed**.
 
 *Why aren’t Node.js and Python bundled?*
 I'd prefer to let users control their own runtime environments. Bundled interpreters can introduce version conflicts and increase the application footprint.
@@ -88,7 +64,6 @@ Setup instructions to build your own Agents.
 
 ## Pricing
 ChatFrame is currently a paid software product, we support a life time license once the payment is completed.
-
 
 ## Feature Map
 - **Chat**
